@@ -443,8 +443,8 @@ class ObjectOp(PathOp.ObjectOp):
             jobs = [{
                 'x': s[0].BoundBox.XMax,
                 'y': s[0].BoundBox.YMax,
-                'shape': s,
-                'index': i
+                #'index': i,
+                'shape': s
             } for i, s in enumerate(shapes)]
 
             for i in depends:
