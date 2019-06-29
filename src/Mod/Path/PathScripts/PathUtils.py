@@ -707,13 +707,13 @@ def sort_jobs(locations, keys, attractors=[]):
 
         while True:
             prio, i, result = q.get()
-            PathLog.debug("Queue got {}".format(result['index']))
+            #PathLog.debug("Queue got {}".format(result['index']))
             if 'depends' in result and len(result['depends']) > 0:
-                PathLog.debug("Rejecting {} because it depends on {}".format(result['index'], map(lambda j: j['index'], result['depends'])))
+                #PathLog.debug("Rejecting {} because it depends on {}".format(result['index'], map(lambda j: j['index'], result['depends'])))
                 continue
             for loc in locations:
                 if 'depends' in loc and result in loc['depends']:
-                    PathLog.debug("Removing {} from {}".format(result['index'], j['index']))
+                    #PathLog.debug("Removing {} from {}".format(result['index'], j['index']))
                     loc['depends'].remove(result)
             break
 
