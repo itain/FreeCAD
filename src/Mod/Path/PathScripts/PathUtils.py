@@ -672,6 +672,8 @@ def sort_jobs(locations, keys, attractors=[]):
         keys: two-element list of keys for X and Y coordinates. for example ['x','y']
         originally written by m0n5t3r for PathHelix
     """
+    PathLog.track()
+
     try:
         from queue import PriorityQueue
     except ImportError:
@@ -703,7 +705,17 @@ def sort_jobs(locations, keys, attractors=[]):
             # prevent dictionary comparison by inserting the index
             q.put((dist(j, location) + weight(j), i, j))
 
-        prio, i, result = q.get()
+        while True:
+            prio, i, result = q.get()
+            PathLog.debug("Queue got {}".format(result['index']))
+            if 'depends' in result and len(result['depends']) > 0:
+                PathLog.debug("Rejecting {} because it depends on {}".format(result['index'], map(lambda j: j['index'], result['depends'])))
+                continue
+            for loc in locations:
+                if 'depends' in loc and result in loc['depends']:
+                    PathLog.debug("Removing {} from {}".format(result['index'], j['index']))
+                    loc['depends'].remove(result)
+            break
 
         return result
 
