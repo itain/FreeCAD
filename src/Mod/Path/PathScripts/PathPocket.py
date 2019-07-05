@@ -21,12 +21,6 @@
 # *   USA                                                                   *
 # *                                                                         *
 # ***************************************************************************
-# *                                                                         *
-# *   Additional modifications and contributions beginning 2019             *
-# *   Focus: improve 3D facial pockets                                      *
-# *   by Russell Johnson  <russ4262@gmail.com>                              *
-# *                                                                         *
-# ***************************************************************************
 
 import FreeCAD
 import Part
@@ -43,8 +37,8 @@ __url__ = "http://www.freecadweb.org"
 __doc__ = "Class and implementation of the 3D Pocket operation."
 __contributors__ = "russ4262 (Russell Johnson)"
 __created__ = "2014"
-__scriptVersion__ = "1a testing"
-__lastModified__ = "2019-06-28 23:45 CST"
+__scriptVersion__ = "1b testing"
+__lastModified__ = "2019-07-01 20:13 CST"
 
 LOGLEVEL = False
 
@@ -53,7 +47,6 @@ if LOGLEVEL:
     PathLog.trackModule(PathLog.thisModule())
 else:
     PathLog.setLevel(PathLog.Level.INFO, PathLog.thisModule())
-
 
 # Qt translation handling
 def translate(context, text, disambig=None):
@@ -71,7 +64,6 @@ class ObjectPocket(PathPocketBase.ObjectPocket):
         if not hasattr(obj, 'HandleMultipleFeatures'):
             obj.addProperty('App::PropertyEnumeration', 'HandleMultipleFeatures', 'Pocket', QtCore.QT_TRANSLATE_NOOP('PathPocket', 'Choose how to process multiple Base Geometry features.'))
         obj.HandleMultipleFeatures = ['Collectively', 'Individually']
-        pass
 
     def opOnDocumentRestored(self, obj):
         '''opOnDocumentRestored(obj) ... adds the properties if they doesn't exist.'''
@@ -83,7 +75,6 @@ class ObjectPocket(PathPocketBase.ObjectPocket):
     def areaOpShapes(self, obj):
         '''areaOpShapes(obj) ... return shapes representing the solids to be removed.'''
         PathLog.track()
-        PathLog.info("----- areaOpShapes() in PathPocket.py")
 
         removalshapes = []
         if obj.Base:
@@ -137,7 +128,7 @@ class ObjectPocket(PathPocketBase.ObjectPocket):
 
 
 def SetupProperties():
-    return PathPocketBase.SetupProperties().append("HandleMultipleFeatures")
+    return PathPocketBase.SetupProperties() + ["HandleMultipleFeatures"]
 
 
 def Create(name, obj=None):
