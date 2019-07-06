@@ -244,6 +244,7 @@ class DraftTool:
         FreeCAD.activeDraftCommand = self
         self.view = Draft.get3DView()
         self.ui = FreeCADGui.draftToolBar
+        self.featureName = name
         self.ui.sourceCmd = self
         self.ui.setTitle(name)
         self.ui.show()
@@ -255,7 +256,6 @@ class DraftTool:
         self.obj = None
         self.extendedCopy = False
         self.ui.setTitle(name)
-        self.featureName = name
         self.planetrack = None
         if Draft.getParam("showPlaneTracker",False):
             self.planetrack = PlaneTracker()
@@ -372,6 +372,9 @@ class SelectPlane(DraftTool):
                 if hasattr(sel.Object.ViewObject,"AutoWorkingPlane"):
                     if sel.Object.ViewObject.AutoWorkingPlane:
                         plane.weak = True
+                if hasattr(sel.Object.ViewObject,"CutView") and hasattr(sel.Object.ViewObject,"AutoCutView"):
+                    if sel.Object.ViewObject.AutoCutView:
+                        sel.Object.ViewObject.CutView = True
                 if hasattr(sel.Object.ViewObject,"RestoreView"):
                     if sel.Object.ViewObject.RestoreView:
                         if hasattr(sel.Object.ViewObject,"ViewData"):
