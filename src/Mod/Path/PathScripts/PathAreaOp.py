@@ -413,24 +413,26 @@ class ObjectOp(PathOp.ObjectOp):
 
         if len(shapes) > 1:
             PathLog.debug("Ordering {} shapes".format(len(shapes)))
-            # initial sorting by Y-size
+            # initial sorting by Y-size increasing
             shapes.sort(key=lambda s: s[0].BoundBox.YMax-s[0].BoundBox.YMin)
             depends = {}
             for i, s1 in enumerate(shapes):
                 bb = s1[0].BoundBox
                 PathLog.debug("Shape  {} xmin {} xmax {} ymin {} ymax {} zmin {} zmax {} vertexes {}".format(
                     i, bb.XMin, bb.XMax, bb.YMin, bb.YMax, bb.ZMin, bb.ZMax, len(s1[0].Vertexes)))
-                if len(s1[0].Vertexes) > 0:
-                    PathLog.debug("Shape vertex {}".format(s1[0].Vertexes[0].Point))
+
+                #can we have a shape with no vertex?
 
                 #any point that's inside this shape will do!
+                #Use the first vertex and average Z. It's a point on the edge but here we assume that our paths do not touch.
                 vector = s1[0].Vertexes[0].Point
                 vector = FreeCAD.Vector(vector.x, vector.y, (bb.ZMin+bb.ZMax)/2)
+                PathLog.debug("Shape point {}".format(vector))
 
                 # Try to find a container. Initial sorting supposed to guarantee that there is no
                 # container before this shape, and also that the first container is the direct container.
                 for j, s2 in enumerate(shapes[i+1:],i+1):
-                    if s2[0].isInside(vector, 1e-6, False):
+                    if s2[0].isInside(vector, 1e-6, True):  # Why does it fail with False?
                         PathLog.debug("shape {} is inside {}".format(i, j))
                         if j in depends:
                             depends[j].append(i)
