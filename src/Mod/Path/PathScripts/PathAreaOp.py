@@ -450,7 +450,7 @@ class ObjectOp(PathOp.ObjectOp):
             for i in depends:
                 jobs[i]['depends'] = map(lambda j: jobs[j], depends[i])
 
-            PathLog.debug("Jobs {}".format(jobs))
+            #PathLog.debug("Jobs {}".format(jobs))
 
             jobs = PathUtils.sort_jobs(jobs, ['x', 'y'])
 

@@ -662,7 +662,6 @@ def sort_jobs(locations, keys, attractors=None):
                     #PathLog.debug("Removing {} from {}".format(result['index'], j['index']))
                     loc['depends'].remove(result)
             break
-        prio, i, result = q.get()
 
         return result
 
