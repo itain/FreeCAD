@@ -445,7 +445,8 @@ class ObjectOp(PathOp.ObjectOp):
                 'y': s[0].BoundBox.YMax,
                 #'index': i,
                 'shape': s
-            } for i, s in enumerate(shapes)]
+            } for s in shapes]
+            #} for i, s in enumerate(shapes)] # if we want to add 'index' for debugging
 
             for i in depends:
                 jobs[i]['depends'] = map(lambda j: jobs[j], depends[i])
