@@ -95,6 +95,7 @@ def joinWalls(walls,delete=False):
     """joins the given list of walls into one sketch-based wall. If delete
     is True, merged wall objects are deleted"""
 
+    import Part
     if not walls:
         return None
     if not isinstance(walls,list):
@@ -116,7 +117,10 @@ def joinWalls(walls,delete=False):
         if w.Base:
             if not w.Base.Shape.Faces:
                 for e in w.Base.Shape.Edges:
-                    sk.addGeometry(e.Curve)
+                    l = e.Curve
+                    if isinstance(l,Part.Line):
+                        l = Part.LineSegment(e.Vertexes[0].Point,e.Vertexes[-1].Point)
+                    sk.addGeometry(l)
                     deleteList.append(w.Name)
     if delete:
         for n in deleteList:
@@ -757,7 +761,10 @@ class _Wall(ArchComponent.Component):
                                     #print "modifying p2"
                                     obj.Base.End = p2
                                 elif Draft.getType(obj.Base) == "Sketch":
-                                    obj.Base.movePoint(0,2,p2,0)
+                                    try:
+                                        obj.Base.movePoint(0,2,p2,0)
+                                    except:
+                                        print("Debug: The base sketch of this wall could not be changed, because the sketch has not been edited yet in this session (this is a bug in FreeCAD). Try entering and exiting edit mode in this sketch first, and then changing the wall length should work.")
                                 else:
                                     FreeCAD.Console.PrintError(translate("Arch","Error: Unable to modify the base object of this wall")+"\n")
         self.hideSubobjects(obj,prop)

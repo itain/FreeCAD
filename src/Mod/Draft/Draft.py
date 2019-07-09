@@ -241,8 +241,9 @@ def get3DView():
     if FreeCAD.GuiUp:
         import FreeCADGui
         v = FreeCADGui.ActiveDocument.ActiveView
-        if str(type(v)) == "<type 'View3DInventorPy'>":
+        if "View3DInventor" in str(type(v)):
             return v
+        print("Debug: Draft: Warning, not working in active view")
         v = FreeCADGui.ActiveDocument.mdiViewsOfType("Gui::View3DInventor")
         if v:
             return v[0]
@@ -5296,6 +5297,7 @@ class _BezCurve(_DraftObject):
         obj.addProperty("App::PropertyIntegerList","Continuity","Draft",QT_TRANSLATE_NOOP("App::Property","Continuity"))
         obj.addProperty("App::PropertyBool","Closed","Draft",QT_TRANSLATE_NOOP("App::Property","If the Bezier curve should be closed or not"))
         obj.addProperty("App::PropertyBool","MakeFace","Draft",QT_TRANSLATE_NOOP("App::Property","Create a face if this curve is closed"))
+        obj.addProperty("App::PropertyLength","Length","Draft",QT_TRANSLATE_NOOP("App::Property","The length of this object"))
         obj.addProperty("App::PropertyArea","Area","Draft",QT_TRANSLATE_NOOP("App::Property","The area of this object"))
         obj.MakeFace = getParam("fillmode",True)
         obj.Closed = False
@@ -5368,6 +5370,8 @@ class _BezCurve(_DraftObject):
             fp.Shape = w
             if hasattr(fp,"Area") and hasattr(w,"Area"):
                 fp.Area = w.Area
+            if hasattr(fp,"Length") and hasattr(w,"Length"):
+                fp.Length = w.Length            
         fp.Placement = plm
 
     @classmethod
