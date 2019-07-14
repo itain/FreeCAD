@@ -653,7 +653,7 @@ def sort_jobs(locations, keys, attractors=None):
             q.put((dist(j, location) + weight(j), i, j))
 
         while True:
-            prio, i, result = q.get()
+            prio, i, result = q.get() # pylint: disable=unused-variable
             #PathLog.debug("Queue got {}".format(result['index']))
             if 'depends' in result and len(result['depends']) > 0:
                 #PathLog.debug("Rejecting {} because it depends on {}".format(result['index'], map(lambda j: j['index'], result['depends'])))
